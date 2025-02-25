@@ -1,0 +1,25 @@
+import { render, screen } from '@testing-library/react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeScreen from '@/app/(tabs)/index';
+
+const Tab = createBottomTabNavigator();
+
+const MockNavigator = () => (
+  <NavigationContainer>
+    <Tab.Navigator>
+      <Tab.Screen name="{{functionInfo.getNameLower()}}" component={%raw%}{{%endraw%}{{functionInfo.getName()}}{%raw%}}{%endraw%} />
+    </Tab.Navigator>
+  </NavigationContainer>
+);
+
+describe('{{functionInfo.getName()}}', () => {
+  it('should render {{functionInfo.getName()}}', () => {
+    // Render the HomeScreen component wrapped in the navigator
+    render(<MockNavigator />);
+    {%for text in functionInfo.getText()%}
+    {%if loop.first%}let {%endif%}linkElement = screen.getByText("{{ text | replace('\n', '\\n') }}");
+    expect(linkElement).toBeOnTheScreen();
+    {%endfor%}
+  });
+});
