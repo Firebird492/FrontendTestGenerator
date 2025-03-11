@@ -20,6 +20,9 @@ describe('{{functionInfo.getName()}}', () => {
     {%for text in functionInfo.getText()%}
     {%if loop.first%}let {%endif%}linkElement = screen.getByText("{{ text | replace('\n', '\\n') }}");
     expect(linkElement).toBeOnTheScreen();
+    {%endfor%} {%for image in functionInfo.getImages()%}
+    {%if loop.first%}let {%endif%}image = screen.getByTestId({{image}});
+    expect(image).toBeOnTheScreen();
     {%endfor%}
   });
 });

@@ -6,7 +6,9 @@ class Parser:
         self.inFunction = False 
         self.beginCountingBrackets = False
         self.openTextBlock = False
+        self.openImageBlock = False
         self.foundText = []
+        self.imageIds = []
         self.functionName = ""
 
     
@@ -15,6 +17,7 @@ class Parser:
             bracketCount = 0
             currentLine = ""
             for line in file:
+                # get the function name
                 if "export default function" in line:
                     self.inFunction = True
                     self.beginCountingBrackets = True
@@ -23,6 +26,7 @@ class Parser:
                     self.functionName = line[startLine + len("export default function "):endline]
 
                 if self.inFunction:
+                    # get the text show on the screen
                     match =  re.search("<ThemedText[^>]*>", line)
                     if match:
                         self.openTextBlock = True
@@ -33,12 +37,10 @@ class Parser:
                             if currentLine != "" and line[startLine:endLine].strip() != "":
                                 currentLine = currentLine + "\\n"
                             currentLine = currentLine + line[startLine:endLine].strip()
-                            #self.foundText.append(line[startLine:endLine].strip())
                         else:
                             if currentLine != "" and line[:endLine].strip()!="":
                                 currentLine = currentLine + "\\n"
                             currentLine = currentLine + line[:endLine].strip()
-                            #self.foundText.append(line[:endLine].strip())
 
                     if "</ThemedText>" in line:
                         self.openTextBlock = False
@@ -50,6 +52,19 @@ class Parser:
                         bracketCount -= 1
                         if bracketCount == 0:
                             self.inFunction = False
+
+                    # get images
+                    if "<Image" in line:
+                        self.openImageBlock = True
+                    
+                    if self.openImageBlock:
+                        match = re.search(r'testID=(.*)', line)
+                        if match:
+                            self.imageIds.append(match.group(1).strip())
+
+                        if "/>" in line:
+                            self.openImageBlock = False
+
         
     def getFunctionInfo(self):
         self.parseFile()
@@ -57,16 +72,18 @@ class Parser:
         for text in self.foundText:
             if text != "":
                 validText.append(text)
-        return FunctionInfo(self.functionName, validText)
+        
+        return FunctionInfo(self.functionName, validText, self.imageIds)
 
 
 
 
 
 class FunctionInfo:
-    def __init__(self, name:str, text):
+    def __init__(self, name:str, text, imageIds):
         self.name = name
         self.text = text
+        self.images = imageIds
 
     def getName(self):
         return self.name
@@ -76,3 +93,6 @@ class FunctionInfo:
     
     def getText(self):
         return self.text
+    
+    def getImages(self):
+        return self.images
