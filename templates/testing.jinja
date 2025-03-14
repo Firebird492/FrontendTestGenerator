@@ -5,24 +5,14 @@ import HomeScreen from '@/app/(tabs)/index';
 
 const Tab = createBottomTabNavigator();
 
-const MockNavigator = () => (
-  <NavigationContainer>
-    <Tab.Navigator>
-      <Tab.Screen name="{{functionInfo.getNameLower()}}" component={%raw%}{{%endraw%}{{functionInfo.getName()}}{%raw%}}{%endraw%} />
-    </Tab.Navigator>
-  </NavigationContainer>
-);
-
 describe('{{functionInfo.getName()}}', () => {
   it('should render {{functionInfo.getName()}}', () => {
     // Render the HomeScreen component wrapped in the navigator
-    render(<MockNavigator />);
+    const { getByPlaceholderText, getByText, getByTestId } = render(<{{functionInfo.getName()}} />);
     {%for text in functionInfo.getText()%}
-    {%if loop.first%}let {%endif%}linkElement = screen.getByText("{{ text | replace('\n', '\\n') }}");
-    expect(linkElement).toBeOnTheScreen();
+    expect(getByText("{{ text | replace('\n', '\\n') }}")).toBeTruthy();
     {%endfor%} {%for image in functionInfo.getImages()%}
-    {%if loop.first%}let {%endif%}image = screen.getByTestId({{image}});
-    expect(image).toBeOnTheScreen();
+    expect(getByTestId({{image}})).toBeTruthy();
     {%endfor%}
   });
 });
