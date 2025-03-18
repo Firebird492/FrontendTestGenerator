@@ -86,7 +86,7 @@ class Parser:
             if text != "":
                 validText.append(text)
         
-        return FunctionInfo(self.functionName, validText, self.imageIds, self.textPlaceholders, self.filename)
+        return FunctionInfo(self.functionName, validText, self.imageIds, self.textPlaceholders, self.filename[7:])
 
 
 

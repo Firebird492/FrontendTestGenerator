@@ -3,13 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {{functionInfo.getName()}} from '@/app/(tabs)/{{functionInfo.getFileName()}}';
 
-const Tab = createBottomTabNavigator();
 
 describe('{{functionInfo.getName()}}', () => {
 {%if functionInfo.getText()%}
   test('should render {{functionInfo.getName()}} text', () => {
     // Render the HomeScreen component wrapped in the navigator
-    const {getByText} = render(<{{functionInfo.getName()}} />);
+    const {getByText} = render(
+      <NavigationContainer>
+      <{{functionInfo.getName()}} />
+      </NavigationContainer>);
     {%for text in functionInfo.getText()%}
     expect(getByText("{{ text | replace('\n', '\\n') }}")).toBeTruthy();
     {%endfor%} 
@@ -18,7 +20,10 @@ describe('{{functionInfo.getName()}}', () => {
 {%if functionInfo.getImages()%}
   test('should render {{functionInfo.getName()}} images', () => {
     // Render the HomeScreen component wrapped in the navigator
-    const {getByTestId } = render(<{{functionInfo.getName()}} />);
+    const {getByTestId } = render(
+      <NavigationContainer>
+      <{{functionInfo.getName()}} />
+      </NavigationContainer>);
     {%for image in functionInfo.getImages()%}
     expect(getByTestId({{image}})).toBeTruthy();
     {%endfor%}
@@ -27,7 +32,10 @@ describe('{{functionInfo.getName()}}', () => {
 {%if functionInfo.getPlaceholders()%}
   test('should render {{functionInfo.getName()}} placeholder text', () => {
     // Render the HomeScreen component wrapped in the navigator
-    const { getByPlaceholderText } = render(<{{functionInfo.getName()}} />);
+    const { getByPlaceholderText } = render(
+      <NavigationContainer>
+      <{{functionInfo.getName()}} />
+      </NavigationContainer>);
     {%for placeholder in functionInfo.getPlaceholders()%}
     expect(getByPlaceholderText({{placeholder}})).toBeTruthy();
     {%endfor%}
