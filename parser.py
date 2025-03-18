@@ -7,8 +7,10 @@ class Parser:
         self.beginCountingBrackets = False
         self.openTextBlock = False
         self.openImageBlock = False
+        self.openTextInput = False
         self.foundText = []
         self.imageIds = []
+        self.textPlaceholders = []
         self.functionName = ""
 
     
@@ -65,6 +67,17 @@ class Parser:
                         if "/>" in line:
                             self.openImageBlock = False
 
+                    if "<TextInput" in line:
+                        self.openTextInput = True
+                    if self.openTextInput:
+                        match = re.search(r'placeholder=(.*)', line)
+                        if match:
+                            self.textPlaceholders.append(match.group(1).strip())
+
+                        if "/>" in line:
+                            self.openTextInput = False
+
+
         
     def getFunctionInfo(self):
         self.parseFile()
@@ -73,17 +86,19 @@ class Parser:
             if text != "":
                 validText.append(text)
         
-        return FunctionInfo(self.functionName, validText, self.imageIds)
+        return FunctionInfo(self.functionName, validText, self.imageIds, self.textPlaceholders, self.filename)
 
 
 
 
 
 class FunctionInfo:
-    def __init__(self, name:str, text, imageIds):
+    def __init__(self, name:str, text, imageIds, textPlaceholders, filename):
         self.name = name
         self.text = text
         self.images = imageIds
+        self.textPlaceholders = textPlaceholders
+        self.filename = filename
 
     def getName(self):
         return self.name
@@ -96,3 +111,9 @@ class FunctionInfo:
     
     def getImages(self):
         return self.images
+    
+    def getPlaceholders(self):
+        return self.textPlaceholders
+    
+    def getFileName(self):
+        return self.filename.split(".")[0]

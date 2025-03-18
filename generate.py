@@ -3,7 +3,7 @@ import json
 import os
 from parser import Parser
 
-fileName = "index.tsx"
+fileName = "login.tsx"
 
 parser = Parser('inputs/'+fileName)
 functionInfo = parser.getFunctionInfo()

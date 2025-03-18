@@ -1,18 +1,36 @@
 import { render, screen } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '@/app/(tabs)/index';
+import {{functionInfo.getName()}} from '@/app/(tabs)/{{functionInfo.getFileName()}}';
 
 const Tab = createBottomTabNavigator();
 
 describe('{{functionInfo.getName()}}', () => {
-  it('should render {{functionInfo.getName()}}', () => {
+{%if functionInfo.getText()%}
+  test('should render {{functionInfo.getName()}} text', () => {
     // Render the HomeScreen component wrapped in the navigator
-    const { getByPlaceholderText, getByText, getByTestId } = render(<{{functionInfo.getName()}} />);
+    const {getByText} = render(<{{functionInfo.getName()}} />);
     {%for text in functionInfo.getText()%}
     expect(getByText("{{ text | replace('\n', '\\n') }}")).toBeTruthy();
-    {%endfor%} {%for image in functionInfo.getImages()%}
+    {%endfor%} 
+  });
+{%endif%}
+{%if functionInfo.getImages()%}
+  test('should render {{functionInfo.getName()}} images', () => {
+    // Render the HomeScreen component wrapped in the navigator
+    const {getByTestId } = render(<{{functionInfo.getName()}} />);
+    {%for image in functionInfo.getImages()%}
     expect(getByTestId({{image}})).toBeTruthy();
     {%endfor%}
   });
+{%endif%}
+{%if functionInfo.getPlaceholders()%}
+  test('should render {{functionInfo.getName()}} placeholder text', () => {
+    // Render the HomeScreen component wrapped in the navigator
+    const { getByPlaceholderText } = render(<{{functionInfo.getName()}} />);
+    {%for placeholder in functionInfo.getPlaceholders()%}
+    expect(getByPlaceholderText({{placeholder}})).toBeTruthy();
+    {%endfor%}
+  });
+{%endif%}
 });
