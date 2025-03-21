@@ -3,6 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {{functionInfo.getName()}} from '@/app/(tabs)/{{functionInfo.getFileName()}}';
 
+{%if functionInfo.getExpoFontMock()%}
+jest.mock('expo-font', () => ({
+  loadAsync: jest.fn(() => Promise.resolve()),
+  isLoaded: jest.fn(() => true),
+}));
+{%endif%}
 
 describe('{{functionInfo.getName()}}', () => {
 {%if functionInfo.getText()%}
@@ -40,5 +46,4 @@ describe('{{functionInfo.getName()}}', () => {
     expect(getByPlaceholderText({{placeholder}})).toBeTruthy();
     {%endfor%}
   });
-{%endif%}
-});
+{%endif%}});
